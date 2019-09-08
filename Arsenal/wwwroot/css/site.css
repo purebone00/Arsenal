@@ -3,6 +3,10 @@ for details on configuring this project to bundle and minify static web assets. 
 body {
     padding-top: 50px;
     padding-bottom: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    display: flex;
+    color: #333;
+    justify-content: center;
 }
 
 /* Wrapping element */
@@ -34,4 +38,39 @@ body {
     .carousel-caption {
         display: none;
     }
+}
+
+.table-wrapper {
+    overflow: scroll;
+}
+
+table {
+    border: 1px solid #ddd;
+    border-collapse: collapse;
+}
+
+td, th {
+    white-space: nowrap;
+    border: 1px solid #ddd;
+    padding: 20px;
+}
+
+th {
+    background-color: #eee;
+    position: sticky;
+    top: -1px;
+    z-index: 2;
+
+    // The first cell that lives in the top left of our spreadsheet &:first-of-type
+    {
+        left: 0;
+        z-index: 3;
+    }
+}
+
+tbody tr td:first-of-type {
+    background-color: #eee;
+    position: sticky;
+    left: -1px;
+    z-index: 1;
 }
