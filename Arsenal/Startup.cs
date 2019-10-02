@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Arsenal.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Arsenal
 {
@@ -31,8 +33,11 @@ namespace Arsenal
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
-
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            //Adding Database Context into Arsenal
+            services.AddDbContext<ArsenalContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("ArsenalContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
