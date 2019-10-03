@@ -1,4 +1,6 @@
-﻿@model IEnumerable<Arsenal.Models.ArsenalDataModels.Transaction>
+﻿@using Arsenal.Models.ArsenalDataModels
+
+@model IEnumerable<Transaction>
 
 @{
     ViewData["Title"] = "Index";
@@ -8,6 +10,7 @@
 
 <p>
     <a asp-action="Create">Create New</a>
+    @Html.DropDownList("Credit Card", new SelectList(Model.Select(x => x.CreditCardLastFourDigits).Distinct()), "Select Credit Card")
 </p>
 <table class="table">
     <thead>

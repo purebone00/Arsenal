@@ -54,7 +54,7 @@ namespace Arsenal.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("TransactionID,TransactionDate,Description,TotalAmount,GstAmount,PstAmount,PaymentType")] Transaction transaction)
+        public async Task<IActionResult> Create([Bind("TransactionID,TransactionDate,Description,TotalAmount,GstAmount,PstAmount,PaymentType,CreditCardLastFourDigits")] Transaction transaction)
         {
             if (ModelState.IsValid)
             {
@@ -148,6 +148,12 @@ namespace Arsenal.Controllers
         private bool TransactionExists(int id)
         {
             return _context.Transaction.Any(e => e.TransactionID == id);
+        }
+
+        public async Task<IActionResult> Selection_Change()
+        {
+            var selectedCreditCardContext = _context.Transaction.Where(x => x.CreditCardLastFourDigits == "2852");
+            return View(await selectedCreditCardContext.ToListAsync());
         }
     }
 }
