@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Arsenal.Migrations
 {
     [DbContext(typeof(ArsenalContext))]
-    [Migration("20191002211813_InitialCreate")]
+    [Migration("20191003170726_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,6 +26,8 @@ namespace Arsenal.Migrations
                     b.Property<int>("TransactionID")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CreditCardLastFourDigits");
 
                     b.Property<string>("Description");
 

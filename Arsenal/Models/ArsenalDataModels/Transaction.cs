@@ -30,6 +30,8 @@ namespace Arsenal.Models.ArsenalDataModels
         [DisplayName("Payment Type")]
         public string PaymentType { get; set; }
 
+        [DisplayName("Credit Card")]
+        public string CreditCardLastFourDigits { get; set; }
 
     }
 }

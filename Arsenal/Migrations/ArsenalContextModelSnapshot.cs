@@ -25,6 +25,8 @@ namespace Arsenal.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("CreditCardLastFourDigits");
+
                     b.Property<string>("Description");
 
                     b.Property<double>("GstAmount");

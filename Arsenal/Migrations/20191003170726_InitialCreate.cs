@@ -13,14 +13,14 @@ namespace Arsenal.Migrations
                 columns: table => new
                 {
                     TransactionID = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", 
-                        SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     TransactionDate = table.Column<DateTime>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     TotalAmount = table.Column<double>(nullable: false),
                     GstAmount = table.Column<double>(nullable: false),
                     PstAmount = table.Column<double>(nullable: false),
-                    PaymentType = table.Column<string>(nullable: true)
+                    PaymentType = table.Column<string>(nullable: true),
+                    CreditCardLastFourDigits = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
