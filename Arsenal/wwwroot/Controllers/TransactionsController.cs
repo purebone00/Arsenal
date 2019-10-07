@@ -20,9 +20,21 @@ namespace Arsenal.Controllers
         }
 
         // GET: Transactions
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-            return View(await _context.Transaction.ToListAsync());
+            if (id == null)
+            {
+                return View(await _context.Transaction.ToListAsync());
+            }
+
+            var listForCreditCardNumber = await _context.Transaction.Where(creditCard => creditCard.CreditCardLastFourDigits.Equals(id.ToString())).ToListAsync();
+
+            if (listForCreditCardNumber == null)
+            {
+                return View(await _context.Transaction.ToListAsync());
+            }
+
+            return View(listForCreditCardNumber);
         }
 
         // GET: Transactions/Details/5
@@ -150,10 +162,5 @@ namespace Arsenal.Controllers
             return _context.Transaction.Any(e => e.TransactionID == id);
         }
 
-        public async Task<IActionResult> Selection_Change()
-        {
-            var selectedCreditCardContext = _context.Transaction.Where(x => x.CreditCardLastFourDigits == "2852");
-            return View(await selectedCreditCardContext.ToListAsync());
-        }
     }
 }

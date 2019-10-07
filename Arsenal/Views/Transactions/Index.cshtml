@@ -12,6 +12,23 @@
         function helloWorld() {
             console.log('Hello World 2')
         }
+
+        function getNewList() {
+            var valueSelected = $('#temp').val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "@Url.Action("Index", "Transactions")",
+                    dataType: 'text',
+                    data: { id: valueSelected },
+                    success: function () {
+                        console.log('success' + valueSelected)
+                    },
+                    error: function () {
+                        console.log('fail' + valueSelected)
+                    }
+                });
+        }
     </script>
 }
 <h2>Index</h2>
@@ -23,8 +40,11 @@
         "temp",                                                                     //temporary name for dropdownlist as an object, TODO figure out how to get this linked up as a strongly typed namespace for an IEnumerable
         new SelectList(Model.Select(x => x.CreditCardLastFourDigits).Distinct()),   //Pulls distinct credit card numbers
         "Select Credit Card",                                                       //Placeholder name
-        new { onchange = "$(helloWorld)"}                                           //calls on a function onChange()
+        new { onchange = "getNewList()" }                                           //calls on a function onChange()
         )
+
+
+    <a asp-action="Index" asp-route-id="2936">Test Button</a>
 </p>
 <table class="table">
     <!-- Pulls the name for each of the sections from the List<Transaction> -->
