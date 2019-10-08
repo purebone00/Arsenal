@@ -13,6 +13,7 @@ namespace Arsenal.Controllers
     public class TransactionsController : Controller
     {
         private readonly ArsenalContext _context;
+        private string currentCreditCard;
 
         public TransactionsController(ArsenalContext context)
         {
@@ -20,9 +21,24 @@ namespace Arsenal.Controllers
         }
 
         // GET: Transactions
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
-            return View(await _context.Transaction.ToListAsync());
+            if (id == null && currentCreditCard == null)
+            {
+                return View(await _context.Transaction.ToListAsync());
+            }
+            if (currentCreditCard == null || (currentCreditCard != null && id != null))
+                currentCreditCard = id.ToString();
+            
+
+            var listForCreditCardNumber = await _context.Transaction.Where(creditCard => creditCard.CreditCardLastFourDigits.Equals(currentCreditCard)).ToListAsync();
+
+            if (listForCreditCardNumber == null)
+            {
+                return View(await _context.Transaction.ToListAsync());
+            }
+
+            return View(listForCreditCardNumber);
         }
 
         // GET: Transactions/Details/5
@@ -152,7 +168,9 @@ namespace Arsenal.Controllers
 
         public async Task<JsonResult> getNewList(int id)
         {
-            List<Transaction> newListOfTransactions = await _context.Transaction.Where(creditCard => creditCard.CreditCardLastFourDigits.Equals(id.ToString())).ToListAsync();
+            currentCreditCard = id.ToString();
+
+            List<Transaction> newListOfTransactions = await _context.Transaction.Where(creditCard => creditCard.CreditCardLastFourDigits.Equals(currentCreditCard)).ToListAsync();
 
             return Json(newListOfTransactions);
         }
