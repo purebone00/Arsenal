@@ -9,20 +9,33 @@
 <!-- Scripts that will load at the section defined in _layout.cshtml -->
 @section Scripts{
     <script type="text/javascript">
-        function helloWorld() {
-            console.log('Hello World 2')
-        }
-
         function getNewList() {
             var valueSelected = $('#temp').val();
             $.ajax(
                 {
                     type: "POST",
-                    url: "@Url.Action("Index", "Transactions")",
-                    dataType: 'text',
+                    url: '@Url.Action("getNewList", "Transactions")',
                     data: { id: valueSelected },
-                    success: function () {
-                        console.log('success' + valueSelected)
+                    dataType: 'json',
+                    success: function (newList) {
+                        $("#transactionTable").empty();
+
+                        $.each(newList, function (i, item) {
+                            var $tr = $('<tr>').append(
+                                $('<td>').text(item.transactionDate).attr("date-format", "yyyy-mm-dd"),
+                                $('<td>').text(item.description),
+                                $('<td>').text(item.totalAmount),
+                                $('<td>').text(item.gstAmount),
+                                $('<td>').text(item.pstAmount),
+                                $('<td>').text(item.paymentType),
+                                $('<td>').append(
+                                    $('<a>').text("Edit").attr("href", "Transactions\\Edit\\" + item.transactionID), " | ",
+                                    $('<a>').text("Details").attr("href", "Transactions\\Details\\" + item.transactionID), " | ",
+                                    $('<a>').text("Delete").attr("href", "Transactions\\Delete\\" + item.transactionID)
+                                )
+                            ).appendTo("#transactionTable");
+                        });
+                        
                     },
                     error: function () {
                         console.log('fail' + valueSelected)
@@ -42,15 +55,12 @@
         "Select Credit Card",                                                       //Placeholder name
         new { onchange = "getNewList()" }                                           //calls on a function onChange()
         )
-
-
-    <a asp-action="Index" asp-route-id="2936">Test Button</a>
 </p>
 <table class="table">
     <!-- Pulls the name for each of the sections from the List<Transaction> -->
     <thead>
         <tr>
-            <th>
+            <th date-format="yyyy-mm-dd">
                 @Html.DisplayNameFor(model => model.TransactionDate)
             </th>
             <th>
@@ -71,7 +81,7 @@
             <th></th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="transactionTable">
     <!-- Iterates through each of the Transaction Objects in the List<> passed through the controller-->
     @foreach (var item in Model) {
         <tr>
