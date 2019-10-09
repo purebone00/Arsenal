@@ -172,7 +172,27 @@ namespace Arsenal.Controllers
 
             List<Transaction> newListOfTransactions = await _context.Transaction.Where(creditCard => creditCard.CreditCardLastFourDigits.Equals(currentCreditCard)).ToListAsync();
 
+
             return Json(newListOfTransactions);
+        }
+
+        public async Task<IActionResult> SpreadSheet(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            currentCreditCard = id.ToString();
+
+            var listForCurrentCreditCardNumber = await _context.Transaction.Where(creditCard => creditCard.CreditCardLastFourDigits.Equals(currentCreditCard)).ToListAsync();
+
+            if (listForCurrentCreditCardNumber == null)
+            {
+                return NotFound();
+            }
+
+            return View(listForCurrentCreditCardNumber);
         }
     }
 }
