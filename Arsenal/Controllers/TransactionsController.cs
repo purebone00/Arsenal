@@ -23,22 +23,7 @@ namespace Arsenal.Controllers
         // GET: Transactions
         public async Task<IActionResult> Index(int? id)
         {
-            if (id == null && currentCreditCard == null)
-            {
-                return View(await _context.Transaction.ToListAsync());
-            }
-            if (currentCreditCard == null || (currentCreditCard != null && id != null))
-                currentCreditCard = id.ToString();
-            
-
-            var listForCreditCardNumber = await _context.Transaction.Where(creditCard => creditCard.CreditCardLastFourDigits.Equals(currentCreditCard)).ToListAsync();
-
-            if (listForCreditCardNumber == null)
-            {
-                return View(await _context.Transaction.ToListAsync());
-            }
-
-            return View(listForCreditCardNumber);
+            return View(await _context.Transaction.ToListAsync());
         }
 
         // GET: Transactions/Details/5
@@ -166,33 +151,24 @@ namespace Arsenal.Controllers
             return _context.Transaction.Any(e => e.TransactionID == id);
         }
 
-        public async Task<JsonResult> getNewList(int id)
-        {
-            currentCreditCard = id.ToString();
-
-            List<Transaction> newListOfTransactions = await _context.Transaction.Where(creditCard => creditCard.CreditCardLastFourDigits.Equals(currentCreditCard)).ToListAsync();
-
-
-            return Json(newListOfTransactions);
-        }
-
         public async Task<IActionResult> SpreadSheet(int? id)
         {
-            if (id == null)
+            if (id == null && currentCreditCard == null)
             {
-                return NotFound();
+                return View(await _context.Transaction.ToListAsync());
+            }
+            if (currentCreditCard == null || (currentCreditCard != null && id != null))
+                currentCreditCard = id.ToString();
+
+
+            var listForCreditCardNumber = await _context.Transaction.Where(creditCard => creditCard.CreditCardLastFourDigits.Equals(currentCreditCard)).ToListAsync();
+
+            if (listForCreditCardNumber == null)
+            {
+                return View(await _context.Transaction.ToListAsync());
             }
 
-            currentCreditCard = id.ToString();
-
-            var listForCurrentCreditCardNumber = await _context.Transaction.Where(creditCard => creditCard.CreditCardLastFourDigits.Equals(currentCreditCard)).ToListAsync();
-
-            if (listForCurrentCreditCardNumber == null)
-            {
-                return NotFound();
-            }
-
-            return View(listForCurrentCreditCardNumber);
+            return PartialView("_SpreadSheet", listForCreditCardNumber);
         }
     }
 }
