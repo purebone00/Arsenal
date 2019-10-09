@@ -23,22 +23,7 @@ namespace Arsenal.Controllers
         // GET: Transactions
         public async Task<IActionResult> Index(int? id)
         {
-            if (id == null && currentCreditCard == null)
-            {
-                return View(await _context.Transaction.ToListAsync());
-            }
-            if (currentCreditCard == null || (currentCreditCard != null && id != null))
-                currentCreditCard = id.ToString();
-            
-
-            var listForCreditCardNumber = await _context.Transaction.Where(creditCard => creditCard.CreditCardLastFourDigits.Equals(currentCreditCard)).ToListAsync();
-
-            if (listForCreditCardNumber == null)
-            {
-                return View(await _context.Transaction.ToListAsync());
-            }
-
-            return View(listForCreditCardNumber);
+            return View(await _context.Transaction.ToListAsync());
         }
 
         // GET: Transactions/Details/5
@@ -166,13 +151,24 @@ namespace Arsenal.Controllers
             return _context.Transaction.Any(e => e.TransactionID == id);
         }
 
-        public async Task<JsonResult> getNewList(int id)
+        public async Task<IActionResult> SpreadSheet(int? id)
         {
-            currentCreditCard = id.ToString();
+            if (id == null && currentCreditCard == null)
+            {
+                return View(await _context.Transaction.ToListAsync());
+            }
+            if (currentCreditCard == null || (currentCreditCard != null && id != null))
+                currentCreditCard = id.ToString();
 
-            List<Transaction> newListOfTransactions = await _context.Transaction.Where(creditCard => creditCard.CreditCardLastFourDigits.Equals(currentCreditCard)).ToListAsync();
 
-            return Json(newListOfTransactions);
+            var listForCreditCardNumber = await _context.Transaction.Where(creditCard => creditCard.CreditCardLastFourDigits.Equals(currentCreditCard)).ToListAsync();
+
+            if (listForCreditCardNumber == null)
+            {
+                return View(await _context.Transaction.ToListAsync());
+            }
+
+            return PartialView("_SpreadSheet", listForCreditCardNumber);
         }
     }
 }
