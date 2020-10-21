@@ -1,0 +1,57 @@
+﻿@model IEnumerable<Arsenal.Models.ArsenalDataModels.Transaction>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TransactionDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.GstAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PstAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentType)
+            </th>
+            <th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TransactionDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.GstAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PstAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentType)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.TransactionID">Details</a> |
+                <a asp-action="Edit" asp-route-id="@item.TransactionID">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.TransactionID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

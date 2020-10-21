@@ -13,6 +13,7 @@ namespace Arsenal.Controllers
     public class TransactionsController : Controller
     {
         private readonly ArsenalContext _context;
+        private string currentCreditCard;
 
         public TransactionsController(ArsenalContext context)
         {
@@ -20,7 +21,7 @@ namespace Arsenal.Controllers
         }
 
         // GET: Transactions
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
             return View(await _context.Transaction.ToListAsync());
         }
@@ -86,7 +87,7 @@ namespace Arsenal.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("TransactionID,TransactionDate,Description,TotalAmount,GstAmount,PstAmount,PaymentType")] Transaction transaction)
+        public async Task<IActionResult> Edit(int id, [Bind("TransactionID,TransactionDate,Description,TotalAmount,GstAmount,PstAmount,PaymentType,CreditCardLastFourDigits")] Transaction transaction)
         {
             if (id != transaction.TransactionID)
             {
@@ -150,10 +151,24 @@ namespace Arsenal.Controllers
             return _context.Transaction.Any(e => e.TransactionID == id);
         }
 
-        public async Task<IActionResult> Selection_Change()
+        public async Task<IActionResult> SpreadSheet(int? id)
         {
-            var selectedCreditCardContext = _context.Transaction.Where(x => x.CreditCardLastFourDigits == "2852");
-            return View(await selectedCreditCardContext.ToListAsync());
+            if (id == null && currentCreditCard == null)
+            {
+                return View(await _context.Transaction.ToListAsync());
+            }
+            if (currentCreditCard == null || (currentCreditCard != null && id != null))
+                currentCreditCard = id.ToString();
+
+
+            var listForCreditCardNumber = await _context.Transaction.Where(creditCard => creditCard.CreditCardLastFourDigits.Equals(currentCreditCard)).ToListAsync();
+
+            if (listForCreditCardNumber == null)
+            {
+                return View(await _context.Transaction.ToListAsync());
+            }
+
+            return PartialView("_SpreadSheet", listForCreditCardNumber);
         }
     }
 }
